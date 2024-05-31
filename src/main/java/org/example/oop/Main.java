@@ -1,27 +1,32 @@
 package org.example.oop;
 
+import org.example.oop.auth.Account;
+import org.example.oop.auth.AccountManager;
 import org.example.oop.database.DatabaseConnection;
 
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Main {
     public static void main(String[] args) {
-        DatabaseConnection connection = new DatabaseConnection();
-        connection.connect("database.db");
-        String createSQLTable = "CREATE TABLE IF NOT EXISTS accounts( " +
-                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
-                "username TEXT NOT NULL," +
-                "password TEXT NOT NULL)";
+        DatabaseConnection databaseConnection = new DatabaseConnection();
+        databaseConnection.connect("database.db");
+        AccountManager accountManager = new AccountManager(databaseConnection);
+        accountManager.init();
 
+//                    accountManager.register("kubica", "testing123");
         try {
-            PreparedStatement statement = connection.getConnection().prepareStatement(createSQLTable);
-            statement.executeUpdate();
-            System.out.println("table accounts created successfully.");
+
+            if (accountManager.authenticate("kubica", "testing123"))
+                System.out.println("authentication successful");
+            else
+                System.out.println("no such user");
+
+            Account kubica = accountManager.getAccount("kubica");
+            System.out.println(kubica);
         } catch (SQLException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
-        connection.disconnect();
+        databaseConnection.disconnect();
     }
 }
