@@ -15,6 +15,19 @@ public class Song {
         this.duration = duration;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Song song = (Song) o;
+        return duration == song.duration && Objects.equals(artist, song.artist) && Objects.equals(title, song.title);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(artist, title, duration);
+    }
+
     public String getArtist() {
         return artist;
     }
@@ -28,15 +41,11 @@ public class Song {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Song song = (Song) o;
-        return duration == song.duration && Objects.equals(artist, song.artist) && Objects.equals(title, song.title);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(artist, title, duration);
+    public String toString() {
+        return "Song{" +
+                "artist='" + artist + '\'' +
+                ", title='" + title + '\'' +
+                ", duration=" + duration +
+                '}';
     }
 }
